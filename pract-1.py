@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+var = 4
 obs1cols=640
 obs1cole=660
 obs1rows=118
@@ -16,6 +17,9 @@ gcole=134
 stop=0
 stopk=0
 evt = 0
+c=255
+onetime=1
+count = 0
 def mouseclick(event,xpos,ypos,flag,param):
     global evt
     if event==cv2.EVENT_LBUTTONDOWN:
@@ -33,7 +37,7 @@ while True:
     obstacle1 = np.zeros((90,20,3),dtype = np.uint8)
     obstacle1 [:,:] = (0,0,0)
     obstacle2 = np.zeros((90,20,3),dtype = np.uint8)
-    obstacle2 [:,:] = (0,0,0)
+    obstacle2 [:,:] = (c,c,c)
     obstacle3 = np.zeros((50,20,3),dtype = np.uint8)
     obstacle3 [:,:] = (0,0,0)
 
@@ -52,11 +56,16 @@ while True:
     #     cols+=1
     #     cols+=1
     #     row
-    obs2cols-=1
-    obs2cole-=1
-    obs1cols-=1
-    obs1cole-=1
+    obs2cols-=var
+    obs2cole-=var
+    obs1cols-=var
+    obs1cole-=var
 
+    if obs1cols==300 and onetime==1:
+        c=0
+        obs2cols=640
+        obs2cole=660
+        onetime=0
     if evt == 1 and stop == 0:
         grows-=104
         growe-=104
@@ -75,9 +84,20 @@ while True:
         growe+=104
         stopk =1
         stop=0
-    
-    if obs1cols <= 160 and grows ==104:
+    if obs1cols<=4:
+        obs1cols=640
+        obs1cole=660
+    if obs2cols<=4:
+        obs2cols=640
+        obs2cole=660
+    if count >=1000:
+        var=5
+    if count >=2000:
+        var=6
+    if count >=3000:
+        var=7
+    if obs1cols <= 130 and grows ==104 or obs2cols<=130 and grows == 0:
         break
-
     if cv2.waitKey(1) & 0xff == ord(' '):
         break
+    count+=1
